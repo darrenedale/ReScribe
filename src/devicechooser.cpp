@@ -31,7 +31,10 @@ DeviceChooser::DeviceChooser(QWidget * parent)
   m_ui(std::make_unique<Ui::DeviceChooser>())
 {
     m_ui->setupUi(this);
-    connect(m_ui->device, qOverload<int>(&QComboBox::currentIndexChanged), this, &DeviceChooser::updateLastSelected);
+    connect(m_ui->device, qOverload<int>(&QComboBox::currentIndexChanged), [this](int idx) {
+        updateLastSelected(idx);
+        Q_EMIT deviceChanged(devicePath());
+    });
     connect(DeviceNotifier::instance(), &DeviceNotifier::deviceAdded, this, &DeviceChooser::refreshDeviceList);
     connect(DeviceNotifier::instance(), &DeviceNotifier::deviceRemoved, this, &DeviceChooser::refreshDeviceList);
     refreshDeviceList();
@@ -41,7 +44,7 @@ DeviceChooser::~DeviceChooser() = default;
 
 QString DeviceChooser::devicePath() const
 {
-    return m_ui->device->currentData().toString();
+    return m_ui->device->currentData(DeviceFileRole).toString();
 }
 
 bool DeviceChooser::canUseDrive(const StorageDrive & drive)

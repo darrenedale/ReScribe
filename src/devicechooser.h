@@ -36,7 +36,7 @@ namespace ReScribe
         QString devicePath() const;
 
         Q_SIGNALS:
-            void deviceChanged();
+            void deviceChanged(const QString & deviceFile);
 
     protected:
         void refreshDeviceList();
