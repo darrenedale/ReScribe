@@ -13,7 +13,7 @@ find_package(KF5KIO)
 find_package(KF5Solid)
 find_package(KF5Auth)
 
-add_executable(rescribe src/main.cpp src/imagechooser.cpp src/imagechooser.h src/mainwindow.cpp src/mainwindow.h src/devicechooser.cpp src/devicechooser.h src/imagewriter.cpp src/imagewriter.h src/imagewriterjob.cpp src/imagewriterjob.h)
+add_executable(rescribe src/main.cpp src/imagechooser.cpp src/imagechooser.h src/mainwindow.cpp src/mainwindow.h src/devicechooser.cpp src/devicechooser.h src/imagewriter.cpp src/imagewriter.h src/ImageWriterHelper.cpp src/ImageWriterHelper.h)
 
 target_compile_features(rescribe PRIVATE cxx_std_17)
 target_link_libraries(rescribe
