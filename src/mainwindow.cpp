@@ -5,6 +5,9 @@
 #include <memory>
 #include <QPushButton>
 #include <QMessageBox>
+#include <QDebug>
+#include <KAuthAction>
+#include <KAuthExecuteJob>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -66,9 +69,22 @@ void MainWindow::writeImage()
         return;
     }
 
-    QMessageBox::information(
-        this,
-        tr("%1 Message").arg(QApplication::applicationDisplayName()),
-        tr("Would now write the image %1 to the device %2.").arg(imageUrl().toDisplayString()).arg(devicePath())
-    );
+    KAuth::Action writeAction(QStringLiteral("net.equituk.rescribe.imagewriter.write"));
+    writeAction.setHelperId(QStringLiteral("net.equituk.rescribe.imagewriter"));
+
+    writeAction.setArguments({
+             {QStringLiteral("image"), imageUrl().toLocalFile()},
+             {QStringLiteral("device"), devicePath()}
+     });
+
+    // TODO job dialogue
+    auto * writeJob = writeAction.execute();
+    connect(writeJob, qOverload<KJob *, unsigned long>(&KAuth::ExecuteJob::percent), [this](KJob *, unsigned long pc) {
+        qDebug() << "Progress:" << pc << "%";
+    });
+    connect(writeJob, &KAuth::ExecuteJob::finished, [this](KJob * job) {
+        auto * writeJob = qobject_cast<KAuth::ExecuteJob *>(job);
+        qDebug() << "Job finished" << writeJob->errorString();
+    });
+    writeJob->start();
 }

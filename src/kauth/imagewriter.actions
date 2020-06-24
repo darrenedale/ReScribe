@@ -1,0 +1,4 @@
+[net.equituk.rescribe.imagewriter.write]
+Name=Write image
+Description=Write a disk image to a device
+Policy=auth_admin

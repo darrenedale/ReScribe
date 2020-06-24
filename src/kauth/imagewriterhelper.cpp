@@ -2,12 +2,11 @@
 // Created by darren on 23/06/2020.
 //
 
-#include "ImageWriterHelper.h"
-#include <Solid/Block>
+#include "imagewriterhelper.h"
 #include <QUrl>
 #include <QFile>
 
-using Solid::Block;
+using namespace ReScribe;
 
 namespace
 {
@@ -35,7 +34,7 @@ ActionReply ImageWriterHelper::write(QVariantMap args) {
                 break;
 
             case ExitCode::FailedToOpenDevice:
-                reply.setErrorDescription(tr("Device %1 could not be opened for writing.").arg(device.device()));
+                reply.setErrorDescription(tr("Device %1 could not be opened for writing.").arg(device));
                 break;
         }
     }
@@ -89,3 +88,5 @@ ImageWriterHelper::ExitCode ImageWriterHelper::write(const QString &image, const
 
     return ExitCode::Ok;
 }
+
+KAUTH_HELPER_MAIN("net.equituk.rescribe.imagewriter", ReScribe::ImageWriterHelper)
