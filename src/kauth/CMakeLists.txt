@@ -4,6 +4,8 @@ target_link_libraries(rescribe_imagewriter_helper
         KF5::AuthCore
         )
 
+# the helper is going into /usr/local/lib/kauth/ but (on Manjaro) it should be /usr/lib/kauth/
 install(TARGETS rescribe_imagewriter_helper DESTINATION ${KAUTH_HELPER_INSTALL_DIR})
+# dbus system.d/*.conf file is going into /system.d/ rather than /etc/dbus-1/system.d/
 kauth_install_helper_files(rescribe_imagewriter_helper net.equituk.rescribe.imagewriter root)
-kauth_install_actions(net.equituk.rescribe.imagewriter src/imagewriter.actions)
+kauth_install_actions(net.equituk.rescribe.imagewriter imagewriter.actions)

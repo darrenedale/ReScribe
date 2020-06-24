@@ -1,4 +1,4 @@
-add_executable(rescribe src/main.cpp src/imagechooser.cpp src/imagechooser.h src/mainwindow.cpp src/mainwindow.h src/devicechooser.cpp src/devicechooser.h src/imagewriter.cpp src/imagewriter.h)
+add_executable(rescribe main.cpp imagechooser.cpp imagechooser.h mainwindow.cpp mainwindow.h devicechooser.cpp devicechooser.h imagewriter.cpp imagewriter.h)
 target_compile_features(rescribe PRIVATE cxx_std_17)
 target_link_libraries(rescribe
         Qt5::Core
@@ -18,4 +18,4 @@ set_target_properties(rescribe PROPERTIES
         AUTOUIC_SEARCH_PATHS ui
         )
 
-include_directories(kauth)
+add_subdirectory(kauth)

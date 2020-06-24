@@ -3,6 +3,7 @@
 //
 
 #include <memory>
+#include <QApplication>
 #include <QPushButton>
 #include <QMessageBox>
 #include <QDebug>

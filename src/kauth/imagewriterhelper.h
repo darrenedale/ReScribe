@@ -8,8 +8,6 @@
 #include <kauth.h>
 #include <QObject>
 
-namespace ReScribe
-{
     using namespace KAuth;
 
     class ImageWriterHelper : public QObject
@@ -33,6 +31,5 @@ namespace ReScribe
     private:
         ExitCode write(const QString & image, const QString & device);
     };
-}
 
 #endif //RESCRIBE_IMAGEWRITERHELPER_H

@@ -3,10 +3,9 @@
 //
 
 #include "imagewriterhelper.h"
+#include <QDebug>
 #include <QUrl>
 #include <QFile>
-
-using namespace ReScribe;
 
 namespace
 {
@@ -18,6 +17,11 @@ ActionReply ImageWriterHelper::write(QVariantMap args) {
 
     auto image = args["image"].toString();
     auto device = args["device"].toString();
+
+    qDebug() << "Image:" << image;
+    qDebug() << "Device:" << device;
+    return reply;
+
     auto ret = write(image, device);
 
     if (ExitCode::Ok != ret) {
@@ -89,4 +93,4 @@ ImageWriterHelper::ExitCode ImageWriterHelper::write(const QString &image, const
     return ExitCode::Ok;
 }
 
-KAUTH_HELPER_MAIN("net.equituk.rescribe.imagewriter", ReScribe::ImageWriterHelper)
+KAUTH_HELPER_MAIN("net.equituk.rescribe.imagewriter", ImageWriterHelper)

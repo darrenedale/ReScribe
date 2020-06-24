@@ -6,6 +6,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
+# TODO can we use ECM DBUSSYSTEMSERVICEDIR?
 set(DBUS_SYSTEM_SERVICES_INSTALL_DIR /usr/share/dbus-1/system-services/)
 
 find_package(Qt5 5.7 REQUIRED COMPONENTS Core Widgets DBus)
@@ -14,4 +15,4 @@ find_package(KF5KIO)
 find_package(KF5Solid)
 find_package(KF5Auth)
 
-include_directories(src)
+add_subdirectory(src)

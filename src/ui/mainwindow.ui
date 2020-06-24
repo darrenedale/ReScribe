@@ -49,13 +49,13 @@
   <customwidget>
    <class>ReScribe::ImageChooser</class>
    <extends>QWidget</extends>
-   <header>src/imagechooser.h</header>
+   <header>imagechooser.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>ReScribe::DeviceChooser</class>
    <extends>QWidget</extends>
-   <header>src/devicechooser.h</header>
+   <header>devicechooser.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
