@@ -92,12 +92,20 @@ void MainWindow::writeImage()
     writeAction.setTimeout(60 * 60 * 1000);
 
     writeAction.setArguments({
-             {QStringLiteral("image"), imageUrl().toLocalFile()},
-             {QStringLiteral("device"), devicePath()}
-     });
+         {QStringLiteral("image"),  imageUrl().toLocalFile()},
+         {QStringLiteral("device"), devicePath()}
+    });
 
     showWriteProgress();
-    m_ui->progressWidget->setImage(imageUrl().toString());
+
+    auto image = imageUrl();
+
+    if (image.isLocalFile()) {
+        m_ui->progressWidget->setImage(imageUrl().toLocalFile());
+    } else {
+        m_ui->progressWidget->setImage(imageUrl().toString());
+    }
+
     m_ui->progressWidget->setDevice(devicePath());
     m_ui->progressWidget->setProgress(0);
     auto * writeJob = writeAction.execute();

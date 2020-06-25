@@ -10,8 +10,8 @@
 
 namespace
 {
-    // TODO optimise buffer for native device block size if possible
-    constexpr const int IOBufferSize = 4096;
+    // decent amount of anecdotal evidence suggests 64k is a decent block size
+    constexpr const int IOBufferSize = 64 * 1024;
 }
 
 ActionReply ImageWriterHelper::write(QVariantMap args) {
@@ -25,7 +25,7 @@ ActionReply ImageWriterHelper::write(QVariantMap args) {
 
     auto ret = writeImage(image, device);
 
-    qDebug() << "write() returned" << static_cast<int>(ret);
+    qDebug() << "writeImage() returned" << static_cast<int>(ret);
     if (ExitCode::Ok != ret) {
         reply.setType(ActionReply::Type::HelperErrorType);
         reply.setError(static_cast<int>(ret));
