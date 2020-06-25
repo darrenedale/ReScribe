@@ -3,13 +3,15 @@
 //
 
 #include "imagewriterhelper.h"
+#include <unistd.h>
 #include <QDebug>
 #include <QUrl>
 #include <QFile>
 
 namespace
 {
-    constexpr const int IOBufferSize = 4096 * 1024;
+    // TODO optimise buffer for native device block size if possible
+    constexpr const int IOBufferSize = 4096;
 }
 
 ActionReply ImageWriterHelper::write(QVariantMap args) {
@@ -20,10 +22,10 @@ ActionReply ImageWriterHelper::write(QVariantMap args) {
 
     qDebug() << "Image:" << image;
     qDebug() << "Device:" << device;
-    return reply;
 
-    auto ret = write(image, device);
+    auto ret = writeImage(image, device);
 
+    qDebug() << "write() returned" << static_cast<int>(ret);
     if (ExitCode::Ok != ret) {
         reply.setType(ActionReply::Type::HelperErrorType);
         reply.setError(static_cast<int>(ret));
@@ -46,15 +48,19 @@ ActionReply ImageWriterHelper::write(QVariantMap args) {
     return reply;
 }
 
-ImageWriterHelper::ExitCode ImageWriterHelper::write(const QString &image, const QString &device)
+ImageWriterHelper::ExitCode ImageWriterHelper::writeImage(const QString &image, const QString &device)
 {
     auto imageFile = QFile(image);
+
+    qDebug() << "opening image file";
 
     if (!imageFile.open(QIODevice::ReadOnly)) {
         return ExitCode::FailedToOpenImageFile;
     }
 
     auto deviceFile = QFile(device);
+
+    qDebug() << "opening device file";
 
     if (!deviceFile.open(QIODevice::WriteOnly)) {
         return ExitCode::FailedToOpenDevice;
@@ -73,21 +79,25 @@ ImageWriterHelper::ExitCode ImageWriterHelper::write(const QString &image, const
     });
 
     while (!imageFile.atEnd()) {
-        // TODO optimise for native device block size
         readBytes = imageFile.read(buffer, IOBufferSize);
         writeBytes = deviceFile.write(buffer, readBytes);
 
         if (writeBytes != readBytes) {
+            qDebug() << "read" << readBytes << "bytes but wrote" << writeBytes << "bytes";
             return ExitCode::WriteError;
         }
 
-        totalBytes += writeBytes;
+        cumulativeBytes += writeBytes;
 
-        HelperSupport::progressStep(static_cast<double>(writeBytes) / static_cast<double>(totalBytes) * 100.0l);
+        HelperSupport::progressStep(static_cast<double>(cumulativeBytes) / static_cast<double>(totalBytes) * 100.0l);
         HelperSupport::progressStep({
-            {QStringLiteral("bytesWritten"), writeBytes},
+            {QStringLiteral("bytesWritten"), cumulativeBytes},
             {QStringLiteral("totalBytes"), totalBytes}
         });
+
+        // TODO we need to sync otherwise job is reported as complete way before all the writes have actually been
+        //  committed to the device, but do we need to flush on every iteration?
+        fsync(deviceFile.handle());
     }
 
     return ExitCode::Ok;

@@ -34,6 +34,7 @@ namespace ReScribe
         void operator=(DeviceChooser && ) = delete;
 
         QString devicePath() const;
+        QString deviceText() const;
 
         Q_SIGNALS:
             void deviceChanged(const QString & deviceFile);

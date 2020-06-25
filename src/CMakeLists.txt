@@ -1,4 +1,4 @@
-add_executable(rescribe main.cpp imagechooser.cpp imagechooser.h mainwindow.cpp mainwindow.h devicechooser.cpp devicechooser.h imagewriter.cpp imagewriter.h)
+add_executable(rescribe main.cpp imagechooser.cpp imagechooser.h mainwindow.cpp mainwindow.h devicechooser.cpp devicechooser.h imagewriter.cpp imagewriter.h progresswidget.cpp progresswidget.h)
 target_compile_features(rescribe PRIVATE cxx_std_17)
 target_link_libraries(rescribe
         Qt5::Core

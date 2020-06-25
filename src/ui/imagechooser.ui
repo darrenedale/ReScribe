@@ -19,7 +19,7 @@
      <item>
       <widget class="KUrlComboRequester" name="imageSelector">
        <property name="filter">
-        <string>Disk Image Files (*.iso *.img), All Files (*)</string>
+        <string notr="true">*.iso *.img|Disk Image Files\n*|All Files</string>
        </property>
        <property name="mode">
         <set>KFile::ExistingOnly|KFile::File</set>

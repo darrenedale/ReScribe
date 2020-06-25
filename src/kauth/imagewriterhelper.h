@@ -29,7 +29,7 @@
         ActionReply write(QVariantMap args);
 
     private:
-        ExitCode write(const QString & image, const QString & device);
+        ExitCode static writeImage(const QString & image, const QString & device);
     };
 
 #endif //RESCRIBE_IMAGEWRITERHELPER_H

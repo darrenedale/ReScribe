@@ -47,6 +47,11 @@ QString DeviceChooser::devicePath() const
     return m_ui->device->currentData(DeviceFileRole).toString();
 }
 
+QString DeviceChooser::deviceText() const
+{
+    return m_ui->device->currentText();
+}
+
 bool DeviceChooser::canUseDrive(const StorageDrive & drive)
 {
     auto * block = reinterpret_cast<const Solid::Block *>(&drive);

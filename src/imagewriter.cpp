@@ -4,9 +4,3 @@
 
 #include "imagewriter.h"
 #include <future>
-
-bool ReScribe::ImageWriter::write()
-{
-    // TODO if remote, download image
-    // TODO initiate KAuth action
-}

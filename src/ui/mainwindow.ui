@@ -6,32 +6,50 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>889</width>
-    <height>249</height>
+    <width>1008</width>
+    <height>222</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Write a Disk Image</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
-    <widget class="ReScribe::ImageChooser" name="imageSelector" native="true"/>
-   </item>
-   <item>
-    <widget class="ReScribe::DeviceChooser" name="deviceSelector" native="true"/>
-   </item>
-   <item>
-    <spacer name="verticalSpacer">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
+    <widget class="QStackedWidget" name="stack">
+     <property name="currentIndex">
+      <number>0</number>
      </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>148</height>
-      </size>
-     </property>
-    </spacer>
+     <widget class="QWidget" name="configContainer">
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="ReScribe::ImageChooser" name="imageSelector" native="true"/>
+       </item>
+       <item>
+        <widget class="ReScribe::DeviceChooser" name="deviceSelector" native="true"/>
+       </item>
+       <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>109</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="progressContainer">
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="ReScribe::ProgressWidget" name="progressWidget" native="true"/>
+       </item>
+      </layout>
+     </widget>
+    </widget>
    </item>
    <item>
     <widget class="QDialogButtonBox" name="controls">
@@ -56,6 +74,12 @@
    <class>ReScribe::DeviceChooser</class>
    <extends>QWidget</extends>
    <header>devicechooser.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ReScribe::ProgressWidget</class>
+   <extends>QWidget</extends>
+   <header>progresswidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

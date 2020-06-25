@@ -7,6 +7,8 @@
 
 #include <QDialog>
 
+class QPushButton;
+
 namespace Ui {
     class MainWindow;
 }
@@ -34,8 +36,12 @@ namespace ReScribe {
 
             void writeImage();
 
+            void showConfiguration();
+            void showWriteProgress();
+
         private:
             std::unique_ptr<Ui::MainWindow> m_ui;
+            std::unique_ptr<QPushButton> m_writeButton;
     };
 }
 
