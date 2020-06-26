@@ -10,16 +10,21 @@ ReScribe::MessageWidget::MessageWidget(QWidget * parent)
   m_ui(std::make_unique<Ui::MessageWidget>())
 {
     m_ui->setupUi(this);
+    connect(m_ui->closeButton, &QPushButton::clicked, this, &MessageWidget::closeClicked);
 }
 
 void ReScribe::MessageWidget::setMessage(const QString & msg)
 {
-    m_ui->message->setText(image);
+    m_ui->message->setText(msg);
 }
 
 QString ReScribe::MessageWidget::message() const
 {
     return m_ui->message->text();
+}
+
+bool ReScribe::MessageWidget::iconVisible() const {
+    return m_ui->icon->isVisible();
 }
 
 ReScribe::MessageWidget::~MessageWidget() = default;

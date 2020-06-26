@@ -26,6 +26,8 @@ MainWindow::MainWindow(QWidget * parent)
 
     m_ui->imageSelector->setImageUrl(QUrl::fromLocalFile(QStandardPaths::writableLocation(QStandardPaths::DownloadLocation) + "/"));
 
+    connect(m_ui->messageWidget, &MessageWidget::closeClicked, this, &MainWindow::showConfiguration);
+
     auto * writeButton = new QPushButton(QIcon::fromTheme("document-edit"), tr("Write"));
     m_ui->controls->addButton(writeButton, QDialogButtonBox::ActionRole);
     connect(writeButton, &QPushButton::clicked, this, &MainWindow::writeImage);
@@ -71,7 +73,7 @@ void MainWindow::writeImage()
         QMessageBox::critical(
                 this,
                 tr("%1 Error").arg(QApplication::applicationDisplayName()),
-                tr("You must choose an device to write to.")
+                tr("You must choose a device to write to.")
         );
 
         return;
@@ -97,7 +99,6 @@ void MainWindow::writeImage()
     });
 
     showWriteProgress();
-
     auto image = imageUrl();
 
     if (image.isLocalFile()) {
@@ -118,7 +119,7 @@ void MainWindow::writeImage()
     connect(writeJob, &KAuth::ExecuteJob::finished, [this] (KJob * job) {
         auto * writeJob = qobject_cast<KAuth::ExecuteJob *>(job);
         qDebug() << "Job finished" << writeJob->errorString();
-        QTimer::singleShot(5000, this, &MainWindow::showConfiguration);
+        showMessage(tr("Image successfully written."));
     });
 
     writeJob->start();
@@ -134,4 +135,13 @@ void MainWindow::showWriteProgress()
 {
     m_ui->stack->setCurrentWidget(m_ui->progressContainer);
     m_writeButton->setEnabled(false);
+}
+
+void MainWindow::showMessage(const QString & msg)
+{
+    if (!msg.isNull()) {
+        m_ui->messageWidget->setMessage(msg);
+    }
+
+    m_ui->stack->setCurrentWidget(m_ui->messageContainer);
 }

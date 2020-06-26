@@ -43,6 +43,9 @@ namespace ReScribe
         QString title() const;
         void setTitle(const QString & title);
 
+    Q_SIGNALS:
+        void closeClicked();
+
     private:
         std::unique_ptr<Ui::MessageWidget> m_ui;
     };
