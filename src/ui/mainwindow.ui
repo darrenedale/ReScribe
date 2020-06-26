@@ -49,6 +49,13 @@
        </item>
       </layout>
      </widget>
+     <widget class="QWidget" name="messageContainer">
+      <layout class="QVBoxLayout" name="verticalLayout_4">
+       <item>
+        <widget class="ReScribe::MessageWidget" name="messageWidget" native="true"/>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </item>
    <item>
@@ -80,6 +87,12 @@
    <class>ReScribe::ProgressWidget</class>
    <extends>QWidget</extends>
    <header>progresswidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ReScribe::MessageWidget</class>
+   <extends>QWidget</extends>
+   <header>messagewidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
