@@ -134,7 +134,7 @@ void MainWindow::writeRemoteImage(const QUrl & url)
     connect(downloadJob, &KIO::FileCopyJob::processedSize, m_ui->progressWidget, [this, downloadJob] (KJob *, qulonglong bytes) {
         auto sizeText = SizeTextGenerator();
         m_ui->progressWidget->setStatus(
-                tr("Downloaded %1 of %2")
+                tr("%1 of %2 downloaded")
                 .arg(sizeText.setSize(bytes).text<QString>())
                 .arg(sizeText.setSize(downloadJob->totalAmount(KJob::Unit::Bytes)).text<QString>())
                 );
