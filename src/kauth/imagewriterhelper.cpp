@@ -52,15 +52,11 @@ ImageWriterHelper::ExitCode ImageWriterHelper::writeImage(const QString &image, 
 {
     auto imageFile = QFile(image);
 
-    qDebug() << "opening image file";
-
     if (!imageFile.open(QIODevice::ReadOnly)) {
         return ExitCode::FailedToOpenImageFile;
     }
 
     auto deviceFile = QFile(device);
-
-    qDebug() << "opening device file";
 
     if (!deviceFile.open(QIODevice::WriteOnly)) {
         return ExitCode::FailedToOpenDevice;
