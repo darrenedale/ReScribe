@@ -20,6 +20,11 @@ namespace ReScribe
     Q_OBJECT
 
     public:
+        enum class Stage {
+            Download = 0,
+            Write = 1,
+        };
+
         ProgressWidget(QWidget * parent = nullptr);
         ProgressWidget(const ProgressWidget &) = delete;
         ProgressWidget(ProgressWidget &&) = delete;
@@ -37,10 +42,29 @@ namespace ReScribe
         int progress() const;
         void setProgress(int progress);
 
-        void setFinished(const QString & message = QStringLiteral());
+        qint64 writtenBytes() const {
+            return m_writtenBytes;
+        }
+
+        qint64 totalBytes() const {
+            return m_totalBytes;
+        }
+
+        void setBytes(quint64 written, quint64 total);
+        void setTotalBytes(qint64 total) {
+            setBytes(writtenBytes(), total);
+        }
+
+        void setWrittenBytes(quint64 written) {
+            setBytes(written, totalBytes());
+        }
+
+        void setStatus(const QString & status);
 
     private:
         std::unique_ptr<Ui::ProgressWidget> m_ui;
+        qint64 m_writtenBytes;
+        qint64 m_totalBytes;
     };
 }
 

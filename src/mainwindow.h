@@ -36,10 +36,28 @@ namespace ReScribe {
 
             void writeImage();
 
-            void showConfiguration();
-            void showWriteProgress();
+            void showConfigurationWidget();
+            void showProgressWidget();
 
         private:
+            /**
+             * Helper to write an image sourced from a remote URL.
+             *
+             * @param url
+             */
+            void writeRemoteImage(const QUrl & url);
+
+            /**
+             * Helper to write an image sourced from a local file.
+             *
+             * If provided the fileName is the name of the locally-downloaded version of a remote URL. The provided
+             * filename will not be used for display purposes, the imageUrl() will be used. If the fileName is not
+             * provided, it is assumed that imageUrl() is a local file and that file is used.
+             *
+             * @param fileName QString optional local image to write, overriding the imageUrl().
+             */
+            void writeLocalImage(QString fileName = QStringLiteral());
+
             std::unique_ptr<Ui::MainWindow> m_ui;
             std::unique_ptr<QPushButton> m_writeButton;
     };

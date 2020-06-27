@@ -3,6 +3,7 @@
 //
 
 #include "progresswidget.h"
+#include "sizetextgenerator.h"
 #include "ui_progresswidget.h"
 
 ReScribe::ProgressWidget::ProgressWidget(QWidget * parent)
@@ -42,13 +43,21 @@ void ReScribe::ProgressWidget::setProgress(int progress)
     m_ui->progressBar->setValue(progress);
 }
 
-void ReScribe::ProgressWidget::setFinished(const QString & message)
+void ReScribe::ProgressWidget::setBytes(quint64 written, quint64 total)
 {
-    if (message.isEmpty()) {
-        m_ui->status->setText(tr("The image has been writen."));
-    } else {
-        m_ui->status->setText(message);
-    }
+    m_writtenBytes = written;
+    m_totalBytes = total;
+    auto sizeText = SizeTextGenerator();
+    m_ui->status->setText(
+            tr("%1 of %2 written.")
+            .arg(sizeText.setSize(written).text<QString>())
+            .arg(sizeText.setSize(total).text<QString>())
+        );
+}
+
+void ReScribe::ProgressWidget::setStatus(const QString & status)
+{
+    m_ui->status->setText(status);
 }
 
 ReScribe::ProgressWidget::~ProgressWidget() = default;
