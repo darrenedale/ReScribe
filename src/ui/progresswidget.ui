@@ -29,6 +29,13 @@
     </widget>
    </item>
    <item>
+    <widget class="QLabel" name="status">
+     <property name="text">
+      <string></string>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QProgressBar" name="progressBar">
      <property name="value">
       <number>0</number>

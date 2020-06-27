@@ -38,7 +38,6 @@ namespace ReScribe {
 
             void showConfiguration();
             void showWriteProgress();
-            void showMessage(const QString & msg = {});
 
         private:
             std::unique_ptr<Ui::MainWindow> m_ui;

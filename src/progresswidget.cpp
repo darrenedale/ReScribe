@@ -42,4 +42,13 @@ void ReScribe::ProgressWidget::setProgress(int progress)
     m_ui->progressBar->setValue(progress);
 }
 
+void ReScribe::ProgressWidget::setFinished(const QString & message)
+{
+    if (message.isEmpty()) {
+        m_ui->status->setText(tr("The image has been writen."));
+    } else {
+        m_ui->status->setText(message);
+    }
+}
+
 ReScribe::ProgressWidget::~ProgressWidget() = default;

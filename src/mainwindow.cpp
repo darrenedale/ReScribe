@@ -13,6 +13,7 @@
 #include <KAuthExecuteJob>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "application.h"
 
 using namespace ReScribe;
 
@@ -22,15 +23,14 @@ MainWindow::MainWindow(QWidget * parent)
   m_writeButton(std::make_unique<QPushButton>())
 {
     m_ui->setupUi(this);
-    m_ui->stack->setCurrentWidget(m_ui->configContainer);
 
     m_ui->imageSelector->setImageUrl(QUrl::fromLocalFile(QStandardPaths::writableLocation(QStandardPaths::DownloadLocation) + "/"));
 
-    connect(m_ui->messageWidget, &MessageWidget::closeClicked, this, &MainWindow::showConfiguration);
+    connect(m_ui->back, &QPushButton::clicked, this, &MainWindow::showConfiguration);
+    connect(m_ui->write, &QPushButton::clicked, this, &MainWindow::writeImage);
+    connect(m_ui->close, &QPushButton::clicked, rsApp, &Application::quit);
 
-    auto * writeButton = new QPushButton(QIcon::fromTheme("document-edit"), tr("Write"));
-    m_ui->controls->addButton(writeButton, QDialogButtonBox::ActionRole);
-    connect(writeButton, &QPushButton::clicked, this, &MainWindow::writeImage);
+    showConfiguration();
 }
 
 MainWindow::~MainWindow() = default;
@@ -119,7 +119,16 @@ void MainWindow::writeImage()
     connect(writeJob, &KAuth::ExecuteJob::finished, [this] (KJob * job) {
         auto * writeJob = qobject_cast<KAuth::ExecuteJob *>(job);
         qDebug() << "Job finished" << writeJob->errorString();
-        showMessage(tr("Image successfully written."));
+
+        if (writeJob->error()) {
+            m_ui->progressWidget->setFinished(writeJob->errorString());
+            rsApp->showNotification(writeJob->errorString());
+        } else {
+            m_ui->progressWidget->setFinished(tr("The image was written successfully."));
+            rsApp->showNotification(tr("The image was written successfully."));
+        }
+
+        m_ui->back->setEnabled(true);
     });
 
     writeJob->start();
@@ -129,19 +138,11 @@ void MainWindow::showConfiguration()
 {
     m_ui->stack->setCurrentWidget(m_ui->configContainer);
     m_writeButton->setEnabled(true);
+    m_ui->back->setEnabled(false);
 }
 
 void MainWindow::showWriteProgress()
 {
     m_ui->stack->setCurrentWidget(m_ui->progressContainer);
     m_writeButton->setEnabled(false);
-}
-
-void MainWindow::showMessage(const QString & msg)
-{
-    if (!msg.isNull()) {
-        m_ui->messageWidget->setMessage(msg);
-    }
-
-    m_ui->stack->setCurrentWidget(m_ui->messageContainer);
 }

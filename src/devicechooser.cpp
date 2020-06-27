@@ -24,6 +24,10 @@ using Solid::Block;
 
 namespace {
     static constexpr const int DeviceFileRole = Qt::UserRole;
+
+#if (defined(RESCRIBE_DEBUG))
+    static const QString DebugDeviceFile = QStringLiteral("/tmp/rescribe-image");
+#endif
 }
 
 DeviceChooser::DeviceChooser(QWidget * parent)
@@ -234,6 +238,11 @@ void DeviceChooser::refreshDeviceList()
 {
     m_ui->device->clear();
     m_ui->device->addItem(tr("Select device"));
+
+#if (defined(RESCRIBE_DEBUG))
+    m_ui->device->addItem(tr("Debug Device [%1]").arg(DebugDeviceFile));
+    m_ui->device->setItemData(1, DebugDeviceFile, DeviceFileRole);
+#endif
 
     for (const auto & device : Device::listFromType(DeviceInterface::StorageDrive, {})) {
         if (!device.is<StorageDrive>()) {

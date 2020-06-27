@@ -7,6 +7,10 @@ set(CMAKE_AUTOUIC ON)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
+if(${RESCRIBE_DEBUG})
+    add_compile_definitions(RESCRIBE_DEBUG)
+endif()
+
 # TODO these are all temporary overrides that happen to work on my system - we should be able to rely on those
 # configured by the cmake modules
 # TODO can we use ECM DBUSSYSTEMSERVICEDIR?

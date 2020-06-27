@@ -37,6 +37,8 @@ namespace ReScribe
         int progress() const;
         void setProgress(int progress);
 
+        void setFinished(const QString & message = QStringLiteral());
+
     private:
         std::unique_ptr<Ui::ProgressWidget> m_ui;
     };

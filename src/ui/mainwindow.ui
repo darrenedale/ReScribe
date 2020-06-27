@@ -49,24 +49,54 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="messageContainer">
-      <layout class="QVBoxLayout" name="verticalLayout_4">
-       <item>
-        <widget class="ReScribe::MessageWidget" name="messageWidget" native="true"/>
-       </item>
-      </layout>
-     </widget>
     </widget>
    </item>
    <item>
-    <widget class="QDialogButtonBox" name="controls">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="standardButtons">
-      <set>QDialogButtonBox::Close</set>
-     </property>
-    </widget>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QPushButton" name="back">
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset theme="go-previous"/>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="controlsSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>109</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="write">
+       <property name="text">
+        <string>Write</string>
+       </property>
+       <property name="icon">
+        <iconset theme="document-edit"/>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="close">
+       <property name="text">
+        <string>Close</string>
+       </property>
+       <property name="icon">
+        <iconset theme="dialog-close"/>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>
@@ -89,46 +119,7 @@
    <header>progresswidget.h</header>
    <container>1</container>
   </customwidget>
-  <customwidget>
-   <class>ReScribe::MessageWidget</class>
-   <extends>QWidget</extends>
-   <header>messagewidget.h</header>
-   <container>1</container>
-  </customwidget>
  </customwidgets>
  <resources/>
- <connections>
-  <connection>
-   <sender>controls</sender>
-   <signal>accepted()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>accept()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>157</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>controls</sender>
-   <signal>rejected()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>reject()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>286</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>
