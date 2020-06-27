@@ -43,7 +43,6 @@ void Application::showNotification(const QString & message, const QString & titl
         }
     }
 
-    // TODO consider adding a tray icon
     if (QSystemTrayIcon::supportsMessages()) {
         m_trayIcon.showMessage(title, message, QSystemTrayIcon::Information, timeout);
     } else {
