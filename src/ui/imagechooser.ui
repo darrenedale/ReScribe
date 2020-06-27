@@ -13,42 +13,46 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout">
+  <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <layout class="QVBoxLayout" name="verticalLayout">
+    <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="KUrlComboRequester" name="imageSelector">
-       <property name="filter">
-        <string notr="true">*.iso *.img|Disk Image Files\n*|All Files</string>
+      <widget class="QComboBox" name="imageUrl">
+       <property name="editable">
+        <bool>true</bool>
        </property>
-       <property name="mode">
-        <set>KFile::ExistingOnly|KFile::File</set>
+       <property name="insertPolicy">
+        <enum>QComboBox::InsertAtTop</enum>
+       </property>
+       <property name="placeholderText">
+        <string>Choose a file or enter a URL...</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="imageDescription">
+      <widget class="QToolButton" name="chooseLocalFile">
+       <property name="toolTip">
+        <string>Choose a local disk image to write.</string>
+       </property>
        <property name="text">
         <string/>
+       </property>
+       <property name="icon">
+        <iconset theme="document-open"/>
        </property>
       </widget>
      </item>
     </layout>
    </item>
+   <item>
+    <widget class="QLabel" name="imageDescription">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>KUrlComboRequester</class>
-   <extends>KUrlRequester</extends>
-   <header>kurlrequester.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KUrlRequester</class>
-   <extends>QWidget</extends>
-   <header>kurlrequester.h</header>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>

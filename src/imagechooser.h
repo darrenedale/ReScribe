@@ -38,6 +38,7 @@ namespace ReScribe
             void imageUrlChanged(QUrl);
 
         private:
+            void chooseLocalFile();
             std::unique_ptr<Ui::ImageChooser> m_ui;
     };
 }
