@@ -12,6 +12,7 @@
 #include <QDebug>
 #include <QStringBuilder>
 #include "devicechooser.h"
+#include "sizetextgenerator.h"
 #include "ui_devicechooser.h"
 
 using namespace ReScribe;
@@ -204,27 +205,28 @@ QString DeviceChooser::generateDeviceText(const Solid::Device & volumeDevice)
     product = static_cast<QString>(vendor % " " % product).trimmed();
     auto hasLabel = !label.isEmpty();
     auto hasProduct = !product.isEmpty();
+    auto sizeText = SizeTextGenerator(volume->size()).text<QString>();
 
     if (hasLabel && hasProduct) {
         return QStringLiteral("%1 %2 (%3) [%4]")
-                .arg(generateSizeText(volume->size()))
+                .arg(sizeText)
                 .arg(product)
                 .arg(label)
                 .arg(block->device());
     }
     else if (hasLabel && !hasProduct) {
         return QStringLiteral("%1 Drive (%2) [%3]")
-                .arg(generateSizeText(volume->size()))
+                .arg(sizeText)
                 .arg(label)
                 .arg(block->device());
     } else if (!hasLabel && hasProduct) {
         return QStringLiteral("%1 %2 [%3]")
-                .arg(generateSizeText(volume->size()))
+                .arg(sizeText)
                 .arg(product)
                 .arg(block->device());
     } else {
         return tr("Unlabeled %1 Drive [%2]")
-                .arg(generateSizeText(volume->size()))
+                .arg(sizeText)
                 .arg(block->device());
     }
 }
