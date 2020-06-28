@@ -42,29 +42,15 @@ namespace ReScribe
         int progress() const;
         void setProgress(int progress);
 
-        qint64 writtenBytes() const {
-            return m_writtenBytes;
-        }
-
-        qint64 totalBytes() const {
-            return m_totalBytes;
-        }
-
-        void setBytes(quint64 written, quint64 total);
-        void setTotalBytes(qint64 total) {
-            setBytes(writtenBytes(), total);
-        }
-
-        void setWrittenBytes(quint64 written) {
-            setBytes(written, totalBytes());
-        }
-
         void setStatus(const QString & status);
+
+        void setCancelButtonEnabled(bool enabled = true);
+
+    Q_SIGNALS:
+        void cancelClicked();
 
     private:
         std::unique_ptr<Ui::ProgressWidget> m_ui;
-        qint64 m_writtenBytes;
-        qint64 m_totalBytes;
     };
 }
 

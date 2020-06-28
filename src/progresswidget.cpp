@@ -6,58 +6,62 @@
 #include "sizetextgenerator.h"
 #include "ui_progresswidget.h"
 
-ReScribe::ProgressWidget::ProgressWidget(QWidget * parent)
+namespace {
+    static constexpr const int IconSize = 32;
+}
+
+using namespace ReScribe;
+
+ProgressWidget::ProgressWidget(QWidget * parent)
 : QWidget(parent),
   m_ui(std::make_unique<Ui::ProgressWidget>())
 {
     m_ui->setupUi(this);
+    
+    m_ui->imageIcon->setPixmap(QIcon::fromTheme(QStringLiteral("application-x-raw-disk-image")).pixmap(IconSize));
+    m_ui->deviceIcon->setPixmap(QIcon::fromTheme(QStringLiteral("drive-removable-media")).pixmap(IconSize));
+
+    connect(m_ui->cancel, &QAbstractButton::clicked, this, &ProgressWidget::cancelClicked);
 }
 
-void ReScribe::ProgressWidget::setImage(const QString & image)
+void ProgressWidget::setImage(const QString & image)
 {
     m_ui->image->setText(image);
 }
 
-QString ReScribe::ProgressWidget::image() const
+QString ProgressWidget::image() const
 {
     return m_ui->image->text();
 }
 
-QString ReScribe::ProgressWidget::device() const
+QString ProgressWidget::device() const
 {
     return m_ui->device->text();
 }
 
-void ReScribe::ProgressWidget::setDevice(const QString & device)
+void ProgressWidget::setDevice(const QString & device)
 {
     m_ui->device->setText(device);
 }
 
-int ReScribe::ProgressWidget::progress() const
+int ProgressWidget::progress() const
 {
     return m_ui->progressBar->value();
 }
 
-void ReScribe::ProgressWidget::setProgress(int progress)
+void ProgressWidget::setProgress(int progress)
 {
     m_ui->progressBar->setValue(progress);
 }
 
-void ReScribe::ProgressWidget::setBytes(quint64 written, quint64 total)
-{
-    m_writtenBytes = written;
-    m_totalBytes = total;
-    auto sizeText = SizeTextGenerator();
-    m_ui->status->setText(
-            tr("%1 of %2 written.")
-            .arg(sizeText.setSize(written).text<QString>())
-            .arg(sizeText.setSize(total).text<QString>())
-        );
-}
-
-void ReScribe::ProgressWidget::setStatus(const QString & status)
+void ProgressWidget::setStatus(const QString & status)
 {
     m_ui->status->setText(status);
 }
 
-ReScribe::ProgressWidget::~ProgressWidget() = default;
+void ProgressWidget::setCancelButtonEnabled(bool enabled)
+{
+    m_ui->cancel->setEnabled(enabled);
+}
+
+ProgressWidget::~ProgressWidget() = default;
