@@ -33,6 +33,7 @@ namespace ReScribe {
             QString imageDescription() const;
 
             QString devicePath() const;
+            QString deviceDescription() const;
 
             void writeImage();
 
@@ -59,7 +60,6 @@ namespace ReScribe {
             void writeLocalImage(QString fileName = QStringLiteral());
 
             std::unique_ptr<Ui::MainWindow> m_ui;
-            std::unique_ptr<QPushButton> m_writeButton;
     };
 }
 

@@ -26,8 +26,7 @@ using namespace ReScribe;
 
 MainWindow::MainWindow(QWidget * parent)
 : QDialog(parent),
-  m_ui(std::make_unique<Ui::MainWindow>()),
-  m_writeButton(std::make_unique<QPushButton>())
+  m_ui(std::make_unique<Ui::MainWindow>())
 {
     m_ui->setupUi(this);
 
@@ -104,27 +103,35 @@ void MainWindow::writeImage()
 void MainWindow::showConfigurationWidget()
 {
     m_ui->stack->setCurrentWidget(m_ui->configContainer);
-    m_writeButton->setEnabled(true);
+    m_ui->write->setEnabled(true);
+    m_ui->close->setEnabled(true);
     m_ui->back->setEnabled(false);
 }
 
 void MainWindow::showProgressWidget()
 {
-    m_ui->stack->setCurrentWidget(m_ui->progressContainer);
-    m_writeButton->setEnabled(false);
+    m_ui->stack->setCurrentWidget(m_ui->progressWidget);
+    m_ui->write->setEnabled(false);
+    m_ui->close->setEnabled(false);
 }
 
 void MainWindow::writeRemoteImage(const QUrl & url)
 {
     showProgressWidget();
 
-    QTemporaryFile * imageFile = new QTemporaryFile(QStringLiteral("rescribe-remote-image-XXXXXX"), this);
+    auto * imageFile = new QTemporaryFile(QStringLiteral("rescribe-remote-image-XXXXXX"), this);
     imageFile->open();
     KIO::FileCopyJob * downloadJob = KIO::file_copy(imageUrl(), QUrl::fromLocalFile(imageFile->fileName()), -1, KIO::JobFlag::Overwrite | KIO::JobFlag::HideProgressInfo);
 
+    auto cancelConnection = connect(m_ui->progressWidget, &ProgressWidget::cancelClicked, [downloadJob] () {
+        downloadJob->kill(KJob::KillVerbosity::EmitResult);
+    });
+
+    m_ui->progressWidget->setCancelButtonEnabled(true);
+
     m_ui->progressWidget->setProgress(0);
     m_ui->progressWidget->setImage(url.toString());
-    m_ui->progressWidget->setDevice(devicePath());
+    m_ui->progressWidget->setDevice(deviceDescription());
     m_ui->progressWidget->setStatus(tr("Downloading disk image..."));
 
     connect(downloadJob, qOverload<KJob *, unsigned long>(&KIO::FileCopyJob::percent), m_ui->progressWidget, [this] (KJob *, unsigned long pc) {
@@ -140,7 +147,8 @@ void MainWindow::writeRemoteImage(const QUrl & url)
                 );
     });
 
-    connect(downloadJob, &KIO::FileCopyJob::result, [this, downloadJob, imageFile] (KJob * job) {
+    connect(downloadJob, &KIO::FileCopyJob::finished, [this, downloadJob, imageFile, cancelConnection = std::move(cancelConnection)] (KJob * job) {
+        disconnect(cancelConnection);
         downloadJob->deleteLater();
         imageFile->close();
 
@@ -148,10 +156,12 @@ void MainWindow::writeRemoteImage(const QUrl & url)
             writeLocalImage(imageFile->fileName());
             // NOTE leave parent to remove temp file as we need it as long as the write job is in progress
         } else {
-            qDebug() << job->errorString();
-            m_ui->progressWidget->setStatus(tr("The image could not be downloaded."));
-            rsApp->showNotification(tr("The image could not be downloaded."));
+            qDebug() << job->error() << job->errorString();
+            m_ui->progressWidget->setStatus(tr("The disk image could not be downloaded."));
+            rsApp->showNotification(tr("The disk image could not be downloaded."));
             delete imageFile;
+            m_ui->progressWidget->setCancelButtonEnabled(false);
+            m_ui->close->setEnabled(true);
             m_ui->back->setEnabled(true);
         }
     });
@@ -175,11 +185,16 @@ void MainWindow::writeLocalImage(QString fileName)
     });
 
     showProgressWidget();
-    m_ui->progressWidget->setDevice(devicePath());
-    m_ui->progressWidget->setProgress(0);
+    m_ui->progressWidget->setDevice(deviceDescription());
     auto * writeJob = writeAction.execute();
+    m_ui->progressWidget->setCancelButtonEnabled(true);
+
+    auto cancelConnection = connect(m_ui->progressWidget, &ProgressWidget::cancelClicked, [writeJob] () {
+        writeJob->kill(KJob::KillVerbosity::EmitResult);
+    });
 
     if (imageUrl().isLocalFile()) {
+        m_ui->progressWidget->setProgress(0);
         m_ui->progressWidget->setImage(imageUrl().toLocalFile());
 
         connect(writeJob, qOverload<KJob *, unsigned long>(&KAuth::ExecuteJob::percent),
@@ -187,6 +202,8 @@ void MainWindow::writeLocalImage(QString fileName)
                     m_ui->progressWidget->setProgress(pc);
                 });
     } else {
+        // writing remote image, so start at 50% on the assumption that the first 50% was downloading the disk image
+        m_ui->progressWidget->setProgress(50);
         m_ui->progressWidget->setImage(imageUrl().toString());
 
         connect(writeJob, qOverload<KJob *, unsigned long>(&KAuth::ExecuteJob::percent),
@@ -211,7 +228,8 @@ void MainWindow::writeLocalImage(QString fileName)
         );
     });
 
-    connect(writeJob, &KAuth::ExecuteJob::finished, [this] (KJob * job) {
+    connect(writeJob, &KAuth::ExecuteJob::finished, [this, cancelConnection = std::move(cancelConnection)] (KJob * job) {
+        disconnect(cancelConnection);
         auto * writeJob = qobject_cast<KAuth::ExecuteJob *>(job);
 
         if (writeJob->error()) {
@@ -223,8 +241,15 @@ void MainWindow::writeLocalImage(QString fileName)
             rsApp->showNotification(tr("The image was written successfully."));
         }
 
+        m_ui->progressWidget->setCancelButtonEnabled(false);
+        m_ui->close->setEnabled(true);
         m_ui->back->setEnabled(true);
     });
 
     writeJob->start();
+}
+
+QString MainWindow::deviceDescription() const
+{
+    return m_ui->deviceSelector->deviceText();
 }
