@@ -1,3 +1,7 @@
+[Domain]
+Name=ReScribe disk image writer
+Icon=rescribe
+
 [net.equituk.rescribe.imagewriter.write]
 Name=Write image
 Description=Write a disk image to a device

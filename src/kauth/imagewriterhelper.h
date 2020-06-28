@@ -1,6 +1,6 @@
-//
-// Created by darren on 23/06/2020.
-//
+/**
+ * KAuth helper to perform privileged write of image file to device
+ */
 
 #ifndef RESCRIBE_IMAGEWRITERHELPER_H
 #define RESCRIBE_IMAGEWRITERHELPER_H
@@ -8,6 +8,9 @@
 #include <kauth.h>
 #include <QObject>
 
+
+namespace ReScribe
+{
     using namespace KAuth;
 
     class ImageWriterHelper : public QObject
@@ -18,7 +21,6 @@
         enum class ExitCode
         {
             Ok = 0,
-            NotSupported,
             FailedToOpenImageFile,
             FailedToOpenDevice,
             WriteError,
@@ -31,5 +33,6 @@
     private:
         ExitCode static writeImage(const QString & image, const QString & device);
     };
+}
 
 #endif //RESCRIBE_IMAGEWRITERHELPER_H

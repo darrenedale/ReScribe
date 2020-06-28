@@ -1,6 +1,6 @@
-//
-// Created by darren on 23/06/2020.
-//
+/**
+ * KAuth helper to perform privileged write of image file to device
+ */
 
 #include "imagewriterhelper.h"
 #include <unistd.h>
@@ -10,29 +10,25 @@
 
 namespace
 {
-    // decent amount of anecdotal evidence suggests 64k is a decent block size
+    // decent amount of anecdotal evidence suggests 64k is a good block size
     constexpr const int IOBufferSize = 64 * 1024;
 }
 
+using namespace ReScribe;
+
 ActionReply ImageWriterHelper::write(QVariantMap args) {
     ActionReply reply;
-
     auto image = args["image"].toString();
     auto device = args["device"].toString();
+    auto result = writeImage(image, device);
 
-    qDebug() << "Image:" << image;
-    qDebug() << "Device:" << device;
-
-    auto ret = writeImage(image, device);
-
-    qDebug() << "writeImage() returned" << static_cast<int>(ret);
-    if (ExitCode::Ok != ret) {
+    if (ExitCode::Ok != result) {
         reply.setType(ActionReply::Type::HelperErrorType);
-        reply.setError(static_cast<int>(ret));
+        reply.setError(static_cast<int>(result));
 
-        switch (ret) {
-            case ExitCode::NotSupported:
-                reply.setErrorDescription(tr("Writing remote images is not yet supported."));
+        switch (result) {
+            case ExitCode::WriteError:
+                reply.setErrorDescription(tr("There was an IO error writing to the device %1.").arg(device));
                 break;
 
             case ExitCode::FailedToOpenImageFile:
@@ -91,12 +87,11 @@ ImageWriterHelper::ExitCode ImageWriterHelper::writeImage(const QString &image, 
             {QStringLiteral("totalBytes"), totalBytes}
         });
 
-        // TODO we need to sync otherwise job is reported as complete way before all the writes have actually been
-        //  committed to the device, but do we need to flush on every iteration?
+        // NOTE we sync otherwise job will be reported as complete way before all the writes have been committed
         fsync(deviceFile.handle());
     }
 
     return ExitCode::Ok;
 }
 
-KAUTH_HELPER_MAIN("net.equituk.rescribe.imagewriter", ImageWriterHelper)
+KAUTH_HELPER_MAIN("net.equituk.rescribe.imagewriter", ReScribe::ImageWriterHelper)
