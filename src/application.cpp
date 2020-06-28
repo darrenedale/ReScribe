@@ -18,6 +18,11 @@ Application::Application(int & argc, char ** argv)
      QStringLiteral("/org/freedesktop/Notifications"),
      QStringLiteral("org.freedesktop.Notifications"))
 {
+    setApplicationDisplayName(QStringLiteral("ReScribe"));
+    setApplicationName(QStringLiteral("ReScribe"));
+    setApplicationVersion(QStringLiteral("0.2"));
+    setOrganizationName(QStringLiteral("Équit"));
+    setOrganizationDomain(QStringLiteral("org.equit"));
     m_trayIcon.show();
 }
 
