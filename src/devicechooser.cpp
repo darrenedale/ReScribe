@@ -36,6 +36,8 @@ DeviceChooser::DeviceChooser(QWidget * parent)
   m_ui(std::make_unique<Ui::DeviceChooser>())
 {
     m_ui->setupUi(this);
+    m_ui->icon->setPixmap(QIcon::fromTheme(QStringLiteral("drive-removable-media")).pixmap(32));
+
     connect(m_ui->device, qOverload<int>(&QComboBox::currentIndexChanged), [this](int idx) {
         updateLastSelected(idx);
         Q_EMIT deviceChanged(devicePath());
