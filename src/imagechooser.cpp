@@ -3,8 +3,11 @@
 //
 
 #include <QUrl>
+#include <QStringBuilder>
 #include <QFileDialog>
 #include "imagechooser.h"
+#include "diskimageinfofactory.h"
+#include "diskimageinfo.h"
 #include "ui_imagechooser.h"
 
 using namespace ReScribe;
@@ -14,9 +17,29 @@ ImageChooser::ImageChooser(QWidget * parent)
   m_ui(std::make_unique<Ui::ImageChooser>())
 {
     m_ui->setupUi(this);
+
+    m_ui->icon->setPixmap(QIcon::fromTheme("application-x-raw-disk-image").pixmap(32));
+
     connect(m_ui->chooseLocalFile, &QToolButton::clicked, this, &ImageChooser::chooseLocalFile);
     connect(m_ui->imageUrl, &QComboBox::editTextChanged, [this] (const QString & text) {
-        Q_EMIT imageUrlChanged(QUrl(text));
+        auto url = QUrl(text);
+        Q_EMIT imageUrlChanged(url);
+
+        if (url.isLocalFile()) {
+            auto info = DiskImageInfoFactory::create(url.toLocalFile());
+
+            if (info) {
+                if (info->infoIsAvailable()) {
+                    setImageDescription(info->type() % QStringLiteral(": ") % info->description());
+                } else {
+                    setImageDescription(info->type());
+                }
+            } else {
+                setImageDescription(tr("Unrecognised disk image type."));
+            }
+        } else {
+            setImageDescription(tr("Description is not available for remote disk images."));
+        }
     });
 }
 

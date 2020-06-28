@@ -1,5 +1,9 @@
-add_executable(rescribe main.cpp imagechooser.cpp imagechooser.h mainwindow.cpp mainwindow.h devicechooser.cpp devicechooser.h progresswidget.cpp progresswidget.h application.cpp application.h sizetextgenerator.cpp)
+find_package(LibArchive REQUIRED COMPONENTS LibArchive)
+
+add_executable(rescribe main.cpp imagechooser.cpp imagechooser.h mainwindow.cpp mainwindow.h devicechooser.cpp devicechooser.h progresswidget.cpp progresswidget.h application.cpp application.h sizetextgenerator.cpp diskimageinfofactory.cpp diskimageinfofactory.h diskimageinfo.h isodiskimageinfo.cpp isodiskimageinfo.h)
+
 target_compile_features(rescribe PRIVATE cxx_std_17)
+
 target_link_libraries(rescribe
         Qt5::Core
         Qt5::Widgets
@@ -12,6 +16,7 @@ target_link_libraries(rescribe
         KF5::Solid
         KF5::AuthCore
         KF5::Auth
+        ${LibArchive_LIBRARIES}
         )
 
 set_target_properties(rescribe PROPERTIES
