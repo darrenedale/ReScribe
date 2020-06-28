@@ -1,7 +1,6 @@
 //
 // Created by darren on 28/06/2020.
 //
-// TODO size of image when written?
 
 #ifndef RESCRIBE_DISKIMAGEINFO_H
 #define RESCRIBE_DISKIMAGEINFO_H
