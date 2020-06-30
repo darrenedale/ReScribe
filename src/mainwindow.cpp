@@ -26,10 +26,10 @@ using namespace ReScribe;
 
 MainWindow::MainWindow(QWidget * parent)
 : QDialog(parent),
-  m_ui(std::make_unique<Ui::MainWindow>())
+  m_ui(std::make_unique<Ui::MainWindow>()),
+  m_state(State::Ready)
 {
     m_ui->setupUi(this);
-
     m_ui->imageSelector->setImageUrl(QUrl::fromLocalFile(QStandardPaths::writableLocation(QStandardPaths::DownloadLocation) + "/"));
 
     connect(m_ui->back, &QPushButton::clicked, this, &MainWindow::showConfigurationWidget);
@@ -63,7 +63,10 @@ QString MainWindow::devicePath() const
 
 void MainWindow::writeImage()
 {
-    // TODO reject if already writing
+    if (State::Ready != state()) {
+        rsApp->showNotification(tr("A disk image is currently being downloaded or written. Wait for that operation to finish (or cancel it) before starting another."));
+        return;
+    }
 
     if (imageUrl().isEmpty()) {
         QMessageBox::critical(
@@ -117,6 +120,7 @@ void MainWindow::showProgressWidget()
 
 void MainWindow::writeRemoteImage(const QUrl & url)
 {
+    m_state = State::Downloading;
     showProgressWidget();
 
     auto * imageFile = new QTemporaryFile(QStringLiteral("rescribe-remote-image-XXXXXX"), this);
@@ -128,7 +132,6 @@ void MainWindow::writeRemoteImage(const QUrl & url)
     });
 
     m_ui->progressWidget->setCancelButtonEnabled(true);
-
     m_ui->progressWidget->setProgress(0);
     m_ui->progressWidget->setImage(url.toString());
     m_ui->progressWidget->setDevice(deviceDescription());
@@ -163,12 +166,15 @@ void MainWindow::writeRemoteImage(const QUrl & url)
             m_ui->progressWidget->setCancelButtonEnabled(false);
             m_ui->close->setEnabled(true);
             m_ui->back->setEnabled(true);
+            m_state = State::Ready;
         }
     });
 }
 
 void MainWindow::writeLocalImage(QString fileName)
 {
+    m_state = State::Writing;
+
     if (fileName.isEmpty()) {
         fileName = imageUrl().toLocalFile();
     }
@@ -244,6 +250,7 @@ void MainWindow::writeLocalImage(QString fileName)
         m_ui->progressWidget->setCancelButtonEnabled(false);
         m_ui->close->setEnabled(true);
         m_ui->back->setEnabled(true);
+        m_state = State::Ready;
     });
 
     writeJob->start();

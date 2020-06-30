@@ -19,6 +19,13 @@ namespace ReScribe {
         Q_OBJECT
 
         public:
+            enum class State
+            {
+                Ready = 0,
+                Downloading = 1,
+                Writing = 2,
+            };
+
             MainWindow(QWidget * parent = nullptr);
             MainWindow(const MainWindow &) = delete;
             MainWindow(MainWindow &&) = delete;
@@ -40,6 +47,11 @@ namespace ReScribe {
             void showConfigurationWidget();
             void showProgressWidget();
 
+            State state() const
+            {
+                return m_state;
+            }
+
         private:
             /**
              * Helper to write an image sourced from a remote URL.
@@ -60,6 +72,8 @@ namespace ReScribe {
             void writeLocalImage(QString fileName = QStringLiteral());
 
             std::unique_ptr<Ui::MainWindow> m_ui;
+
+            State m_state;
     };
 }
 
