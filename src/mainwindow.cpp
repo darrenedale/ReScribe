@@ -16,6 +16,7 @@
 #include "mainwindow.h"
 #include "application.h"
 #include "sizetextgenerator.h"
+#include "writeconfirmationdialogue.h"
 #include "ui_mainwindow.h"
 
 namespace {
@@ -88,19 +89,19 @@ void MainWindow::writeImage()
         return;
     }
 
-    if (QMessageBox::Yes != QMessageBox::question(
-            this,
-            tr("%1 Write Image").arg(QApplication::applicationDisplayName()),
-            tr("Are you sure you want to overwrite the device %1?").arg(m_ui->deviceSelector->deviceText())
-    )) {
-        return;
-    }
+    WriteConfirmationDialogue dlg(this);
+    dlg.setDevice(deviceDescription());
+    dlg.setDiskImage(imageDescription());
 
-    if (imageUrl().isLocalFile()) {
-        writeLocalImage();
-    } else {
-        writeRemoteImage(imageUrl());
-    }
+    connect(&dlg, &WriteConfirmationDialogue::confirmed, [this] () {
+        if (imageUrl().isLocalFile()) {
+            writeLocalImage();
+        } else {
+            writeRemoteImage(imageUrl());
+        }
+    });
+
+    dlg.exec();
 }
 
 void MainWindow::showConfigurationWidget()
