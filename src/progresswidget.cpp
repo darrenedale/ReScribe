@@ -6,10 +6,6 @@
 #include "sizetextgenerator.h"
 #include "ui_progresswidget.h"
 
-namespace {
-    static constexpr const int IconSize = 32;
-}
-
 using namespace ReScribe;
 
 ProgressWidget::ProgressWidget(QWidget * parent)
@@ -18,8 +14,8 @@ ProgressWidget::ProgressWidget(QWidget * parent)
 {
     m_ui->setupUi(this);
     
-    m_ui->imageIcon->setPixmap(QIcon::fromTheme(QStringLiteral("application-x-raw-disk-image")).pixmap(IconSize));
-    m_ui->deviceIcon->setPixmap(QIcon::fromTheme(QStringLiteral("drive-removable-media")).pixmap(IconSize));
+    m_ui->imageIcon->setPixmap(QIcon::fromTheme(QStringLiteral("application-x-raw-disk-image")).pixmap(m_ui->imageIcon->baseSize().width()));
+    m_ui->deviceIcon->setPixmap(QIcon::fromTheme(QStringLiteral("drive-removable-media")).pixmap(m_ui->deviceIcon->baseSize().width()));
 
     connect(m_ui->cancel, &QAbstractButton::clicked, this, &ProgressWidget::cancelClicked);
 }
