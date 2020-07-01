@@ -3,6 +3,7 @@
 //
 
 #include <memory>
+#include <QStringBuilder>
 #include <QApplication>
 #include <QStandardPaths>
 #include <QPushButton>
@@ -15,6 +16,8 @@
 #include <KAuthExecuteJob>
 #include "mainwindow.h"
 #include "application.h"
+#include "diskimageinfofactory.h"
+#include "diskimageinfo.h"
 #include "sizetextgenerator.h"
 #include "writeconfirmationdialogue.h"
 #include "ui_mainwindow.h"
@@ -91,7 +94,22 @@ void MainWindow::writeImage()
 
     WriteConfirmationDialogue dlg(this);
     dlg.setDevice(deviceDescription());
-    dlg.setDiskImage(imageDescription());
+
+    if (imageUrl().isLocalFile()) {
+        auto info = DiskImageInfoFactory::create(imageUrl().toLocalFile());
+
+        if (info) {
+            if (info->infoIsAvailable()) {
+                dlg.setDiskImage(info->type() % QStringLiteral(": ") % info->description());
+            } else {
+                dlg.setDiskImage(imageUrl().toString() % QStringLiteral(" [") % info->type() % QStringLiteral("]"));
+            }
+        } else {
+            dlg.setDiskImage(imageUrl().toString());
+        }
+    } else {
+        dlg.setDiskImage(imageUrl().toString());
+    }
 
     connect(&dlg, &WriteConfirmationDialogue::confirmed, [this] () {
         if (imageUrl().isLocalFile()) {

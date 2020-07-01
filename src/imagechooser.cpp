@@ -18,7 +18,7 @@ ImageChooser::ImageChooser(QWidget * parent)
 {
     m_ui->setupUi(this);
 
-    m_ui->icon->setPixmap(QIcon::fromTheme("application-x-raw-disk-image").pixmap(32));
+    m_ui->icon->setPixmap(QIcon::fromTheme("application-x-raw-disk-image").pixmap(m_ui->icon->baseSize().width()));
 
     connect(m_ui->chooseLocalFile, &QToolButton::clicked, this, &ImageChooser::chooseLocalFile);
     connect(m_ui->imageUrl, &QComboBox::editTextChanged, [this] (const QString & text) {
