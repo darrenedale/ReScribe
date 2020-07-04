@@ -206,7 +206,8 @@ void MainWindow::writeLocalImage(QString fileName)
 
     writeAction.setArguments({
         {QStringLiteral("image"),  fileName},
-        {QStringLiteral("device"), devicePath()}
+        {QStringLiteral("device"), devicePath()},
+        {QStringLiteral("decompress"), decompress()},
     });
 
     showProgressWidget();
@@ -278,4 +279,13 @@ void MainWindow::writeLocalImage(QString fileName)
 QString MainWindow::deviceDescription() const
 {
     return m_ui->deviceSelector->deviceText();
+}
+
+bool MainWindow::decompress() const {
+    return m_ui->decompress->isChecked();
+}
+
+void MainWindow::setDecompress(bool decompress)
+{
+    return m_ui->decompress->setChecked(decompress);
 }

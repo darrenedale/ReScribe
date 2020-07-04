@@ -42,6 +42,9 @@ namespace ReScribe {
             QString devicePath() const;
             QString deviceDescription() const;
 
+            bool decompress() const;
+            void setDecompress(bool decompress);
+
             void writeImage();
 
             void showConfigurationWidget();

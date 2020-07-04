@@ -23,5 +23,6 @@ find_package(KF5WidgetsAddons)
 find_package(KF5KIO)
 find_package(KF5Solid)
 find_package(KF5Auth)
+find_package(LibArchive REQUIRED COMPONENTS LibArchive)
 
 add_subdirectory(src)

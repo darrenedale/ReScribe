@@ -77,6 +77,13 @@
       </spacer>
      </item>
      <item>
+      <widget class="QCheckBox" name="decompress">
+       <property name="text">
+        <string>Decompress the image while writing</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QPushButton" name="write">
        <property name="toolTip">
         <string>Write the disk image to the selected device.</string>

@@ -23,6 +23,7 @@ namespace ReScribe
             Ok = 0,
             FailedToOpenImageFile,
             FailedToOpenDevice,
+            ReadError,
             WriteError,
         };
 
@@ -32,6 +33,7 @@ namespace ReScribe
 
     private:
         ExitCode static writeImage(const QString & image, const QString & device);
+        ExitCode static writeCompressedImage(const QString & image, const QString & device);
     };
 }
 
