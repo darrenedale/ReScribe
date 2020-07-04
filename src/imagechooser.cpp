@@ -73,7 +73,7 @@ void ImageChooser::setImageUrl(const QUrl & url)
 
 void ImageChooser::chooseLocalFile()
 {
-    auto url = QFileDialog::getOpenFileUrl(this, tr("Choose a disk image file"), imageUrl(),"Disk image files (*.iso *.img)\nAll files (*)");
+    auto url = QFileDialog::getOpenFileUrl(this, tr("Choose a disk image file"), imageUrl(),"Disk image files (*.iso *.img)\nCompressed disk image files (*.iso.gz *.iso.bz *.iso.xz *.iso.zip *.img *.img.gz *.img.bz *.img.xz *.img.zip)\nAll files (*)");
 
     if (url.isEmpty()) {
         return;

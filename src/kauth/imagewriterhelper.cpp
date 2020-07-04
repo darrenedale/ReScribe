@@ -129,7 +129,7 @@ ImageWriterHelper::ExitCode ImageWriterHelper::writeCompressedImage(const QStrin
     }
 
     char buffer[IOBufferSize];
-    auto totalBytes = static_cast<qint64>(50);  // TODO this is just a temporary value
+    auto totalBytes = static_cast<qint64>(archive_entry_size_is_set(entry) ? archive_entry_size(entry) : -1);
     decltype(totalBytes) cumulativeBytes = 0;
     decltype(totalBytes) readBytes = 0;
     decltype(totalBytes) writeBytes = 0;
@@ -163,7 +163,11 @@ ImageWriterHelper::ExitCode ImageWriterHelper::writeCompressedImage(const QStrin
 
         cumulativeBytes += writeBytes;
 
-        HelperSupport::progressStep(static_cast<double>(cumulativeBytes) / static_cast<double>(totalBytes) * 100.0l);
+        if (0 < totalBytes) {
+            HelperSupport::progressStep(
+                    static_cast<double>(cumulativeBytes) / static_cast<double>(totalBytes) * 100.0l);
+        }
+
         HelperSupport::progressStep({
             {QStringLiteral("bytesWritten"), cumulativeBytes},
             {QStringLiteral("totalBytes"), totalBytes}

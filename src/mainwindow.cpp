@@ -244,14 +244,20 @@ void MainWindow::writeLocalImage(QString fileName)
             return;
         }
 
+        // NOTE totalBytes will be -1 if the total size is not known (i.e. we're decompressing on-the-fly)
         auto bytesWritten = data["bytesWritten"].value<qint64>();
         auto totalBytes = data["totalBytes"].value<qint64>();
         auto sizeText = SizeTextGenerator();
-        m_ui->progressWidget->setStatus(
-            tr("%1 of %2 written")
-            .arg(sizeText.setSize(bytesWritten).text<QString>())
-            .arg(sizeText.setSize(totalBytes).text<QString>())
-        );
+
+        if (0 < totalBytes) {
+            m_ui->progressWidget->setStatus(
+                    tr("%1 of %2 written")
+                            .arg(sizeText.setSize(bytesWritten).text<QString>())
+                            .arg(sizeText.setSize(totalBytes).text<QString>())
+            );
+        } else {
+            m_ui->progressWidget->setStatus(tr("%1 written").arg(sizeText.setSize(bytesWritten).text<QString>()));
+        }
     });
 
     connect(writeJob, &KAuth::ExecuteJob::finished, [this, cancelConnection = std::move(cancelConnection)] (KJob * job) {

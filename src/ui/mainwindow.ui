@@ -78,6 +78,9 @@
      </item>
      <item>
       <widget class="QCheckBox" name="decompress">
+       <property name="toolTip">
+        <string>Choose this if the disk image is in a compressed file and needs to be uncompressed to be written to the device.</string>
+       </property>
        <property name="text">
         <string>Decompress the image while writing</string>
        </property>
