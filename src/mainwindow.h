@@ -56,6 +56,9 @@ namespace ReScribe {
             }
 
         private:
+            template <typename NextFn>
+            void downloadChecksum(const QUrl & url, NextFn && then);
+
             /**
              * Helper to write an image sourced from a remote URL.
              *

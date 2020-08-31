@@ -125,6 +125,7 @@ void MainWindow::writeImage()
 void MainWindow::showConfigurationWidget()
 {
     m_ui->stack->setCurrentWidget(m_ui->configContainer);
+    m_ui->decompress->setEnabled(true);
     m_ui->write->setEnabled(true);
     m_ui->close->setEnabled(true);
     m_ui->back->setEnabled(false);
@@ -133,8 +134,50 @@ void MainWindow::showConfigurationWidget()
 void MainWindow::showProgressWidget()
 {
     m_ui->stack->setCurrentWidget(m_ui->progressWidget);
+    m_ui->decompress->setEnabled(false);
     m_ui->write->setEnabled(false);
     m_ui->close->setEnabled(false);
+}
+
+template<typename NextFn>
+void MainWindow::downloadChecksum(const QUrl & url, NextFn && then)
+{
+    m_state = State::Downloading;
+    showProgressWidget();
+
+    auto * checksumFile = new QTemporaryFile(QStringLiteral("rescribe-remote-image-checksum-XXXXXX"), this);
+    checksumFile->open();
+    KIO::FileCopyJob * downloadJob = KIO::file_copy(imageUrl(), QUrl::fromLocalFile(checksumFile->fileName()), -1, KIO::JobFlag::Overwrite | KIO::JobFlag::HideProgressInfo);
+
+    auto cancelConnection = connect(m_ui->progressWidget, &ProgressWidget::cancelClicked, [downloadJob] () {
+        downloadJob->kill(KJob::KillVerbosity::EmitResult);
+    });
+
+    m_ui->progressWidget->setCancelButtonEnabled(true);
+    m_ui->progressWidget->setProgress(0);
+    m_ui->progressWidget->setImage(url.toString());
+    m_ui->progressWidget->setDevice(deviceDescription());
+    m_ui->progressWidget->setStatus(tr("Downloading checksum file..."));
+
+    connect(downloadJob, &KIO::FileCopyJob::finished, [this, downloadJob, checksumFile, url, cancelConnection = std::move(cancelConnection), then = std::forward(then)] (KJob * job) {
+        disconnect(cancelConnection);
+        downloadJob->deleteLater();
+        checksumFile->close();
+
+        if (0 == job->error()) {
+            then(url, checksumFile->fileName());
+            // NOTE leave parent to remove temp file as we need it as long as the write job is in progress
+        } else {
+            qDebug() << job->error() << job->errorString();
+            m_ui->progressWidget->setStatus(tr("The disk image could not be downloaded."));
+            rsApp->showNotification(tr("The disk image could not be downloaded."));
+            delete checksumFile;
+            m_ui->progressWidget->setCancelButtonEnabled(false);
+            m_ui->close->setEnabled(true);
+            m_ui->back->setEnabled(true);
+            m_state = State::Ready;
+        }
+    });
 }
 
 void MainWindow::writeRemoteImage(const QUrl & url)
@@ -185,6 +228,7 @@ void MainWindow::writeRemoteImage(const QUrl & url)
             m_ui->progressWidget->setCancelButtonEnabled(false);
             m_ui->close->setEnabled(true);
             m_ui->back->setEnabled(true);
+            m_ui->decompress->setEnabled(true);
             m_state = State::Ready;
         }
     });
