@@ -1,4 +1,4 @@
-add_executable(rescribe main.cpp imagechooser.cpp imagechooser.h mainwindow.cpp mainwindow.h devicechooser.cpp devicechooser.h progresswidget.cpp progresswidget.h application.cpp application.h sizetextgenerator.cpp diskimageinfofactory.cpp diskimageinfofactory.h diskimageinfo.h isodiskimageinfo.cpp isodiskimageinfo.h writeconfirmationwidget.cpp writeconfirmationwidget.h writeconfirmationdialogue.cpp writeconfirmationdialogue.h)
+add_executable(rescribe main.cpp imagechooser.cpp imagechooser.h mainwindow.cpp mainwindow.h devicechooser.cpp devicechooser.h progresswidget.cpp progresswidget.h application.cpp application.h sizetextgenerator.cpp diskimageinfofactory.cpp diskimageinfofactory.h diskimageinfo.h isodiskimageinfo.cpp isodiskimageinfo.h writeconfirmationwidget.cpp writeconfirmationwidget.h writeconfirmationdialogue.cpp writeconfirmationdialogue.h settings.cpp settings.h imagewriter.cpp imagewriter.h)
 
 target_compile_features(rescribe PRIVATE cxx_std_17)
 

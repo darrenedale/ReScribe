@@ -16,7 +16,10 @@ Application::Application(int & argc, char ** argv)
   m_trayIcon(QIcon::fromTheme(QStringLiteral("rescribe"), QIcon(QStringLiteral(":/icons/systray")))),
   m_notificationsInterface(QStringLiteral("org.freedesktop.Notifications"),
      QStringLiteral("/org/freedesktop/Notifications"),
-     QStringLiteral("org.freedesktop.Notifications"))
+     QStringLiteral("org.freedesktop.Notifications")),
+  m_settings({
+    true,
+  })
 {
     setApplicationDisplayName(QStringLiteral("ReScribe"));
     setApplicationName(QStringLiteral("ReScribe"));

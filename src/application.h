@@ -9,6 +9,7 @@
 #include <QApplication>
 #include <QtDBus/QDBusInterface>
 #include <QSystemTrayIcon>
+#include "settings.h"
 
 namespace ReScribe
 {
@@ -40,12 +41,24 @@ namespace ReScribe
             showNotification(message, QStringLiteral(), timeout);
         }
 
+        const Settings & settings() const
+        {
+            return m_settings;
+
+        }
+
+        Settings & settings()
+        {
+            return m_settings;
+        }
+
         static int exec();
 
     private:
         std::unique_ptr<MainWindow> m_mainWindow;
         QDBusInterface m_notificationsInterface;
         QSystemTrayIcon m_trayIcon;
+        Settings m_settings;
     };
 }
 
