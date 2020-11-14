@@ -6,6 +6,11 @@ compiler:
   - clang
   - gcc
 
+branches:
+  only:
+    - main
+    - /^(v ?)?\d+(\.\d+)?(\.\d)?(-\S+)?$/
+
 addons:
   apt:
     packages:
