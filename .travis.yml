@@ -1,12 +1,26 @@
 language: c++
+
+dist: focal
+
 compiler:
-- clang
-- gcc
+  - clang
+  - gcc
+
+addons:
+  apt:
+    packages:
+      - qtbase5-dev
+      - libkf5widgetsaddons-dev
+      - kio-dev
+      - libkf5solid-dev
+      - libkf5auth-dev
+      - libarchive-dev
+
 before_install:
-- sudo apt-get -q update
-- sudo apt-get -y install qtbase5-dev libkf5widgetsaddons-dev kio-dev libkf5solid-dev libkf5auth-dev libarchive-dev
+  - sudo apt-get -q update
+
 script:
-- mkdir build
-- cd build
-- cmake ../
-- cmake --build ./
+  - mkdir build
+  - cd build
+  - cmake ../
+  - cmake --build ./
