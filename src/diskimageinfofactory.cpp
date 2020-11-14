@@ -40,7 +40,11 @@ bool DiskImageInfoFactory::isIsoDiskImage(QIODevice & image)
     // NOTE offsets must remain in ascending order
     for (const auto offset : {0x8001, 0x8801, 0x9001}) {
         if (!image.seek(offset)) {
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
             qDebug() << "Failed to seek to offset" << Qt::hex << offset << ", can't determine whether it's an ISO.";
+#else
+            qDebug() << "Failed to seek to offset" << QString::number(offset , 16) << ", can't determine whether it's an ISO.";
+#endif
             return false;
         }
 
