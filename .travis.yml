@@ -2,6 +2,9 @@ language: c++
 compiler:
 - clang
 - gcc
+before_install:
+- sudo apt-get -q updated
+- sudo apt-get -y install qtbase5-dev
 script:
 - mkdir build
 - cd build
