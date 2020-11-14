@@ -20,6 +20,10 @@ ImageChooser::ImageChooser(QWidget * parent)
 
     m_ui->icon->setPixmap(QIcon::fromTheme("application-x-raw-disk-image").pixmap(m_ui->icon->baseSize().width()));
 
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+    m_ui->imageUrl->setPlaceholderText(tr("Choose a file or enter a URL..."));
+#endif
+
     connect(m_ui->chooseLocalFile, &QToolButton::clicked, this, &ImageChooser::chooseLocalFile);
     connect(m_ui->imageUrl, &QComboBox::editTextChanged, [this] (const QString & text) {
         auto url = QUrl(text);

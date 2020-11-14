@@ -222,8 +222,8 @@ void MainWindow::writeRemoteImage(const QUrl & url)
             // NOTE leave parent to remove temp file as we need it as long as the write job is in progress
         } else {
             qDebug() << job->error() << job->errorString();
-            m_ui->progressWidget->setStatus(tr("The disk image could not be downloaded."));
-            rsApp->showNotification(tr("The disk image could not be downloaded."));
+            m_ui->progressWidget->setStatus(tr("The disk image could not be downloaded: %1.").arg((job->errorString())));
+            rsApp->showNotification(tr("The disk image could not be downloaded: %1.").arg(job->errorString()));
             delete imageFile;
             m_ui->progressWidget->setCancelButtonEnabled(false);
             m_ui->close->setEnabled(true);
@@ -260,6 +260,7 @@ void MainWindow::writeLocalImage(QString fileName)
     m_ui->progressWidget->setCancelButtonEnabled(true);
 
     auto cancelConnection = connect(m_ui->progressWidget, &ProgressWidget::cancelClicked, [writeJob] () {
+        qDebug() << "Killing write job";
         writeJob->kill(KJob::KillVerbosity::EmitResult);
     });
 
@@ -310,8 +311,8 @@ void MainWindow::writeLocalImage(QString fileName)
 
         if (writeJob->error()) {
             qDebug() << "Error writing image: [" << writeJob->error() << "]" << writeJob->errorString();
-            m_ui->progressWidget->setStatus(tr("The image could not be written."));
-            rsApp->showNotification(tr("The image could not be written."));
+            m_ui->progressWidget->setStatus(tr("The image was not written: %1.").arg(writeJob->errorString()));
+            rsApp->showNotification(tr("The image was not written: %1.").arg(writeJob->errorString()));
         } else {
             m_ui->progressWidget->setStatus(tr("The image was written successfully."));
             rsApp->showNotification(tr("The image was written successfully."));
