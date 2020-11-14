@@ -18,7 +18,7 @@ set(DBUS_SYSTEM_SERVICES_INSTALL_DIR /usr/share/dbus-1/system-services/)
 set(KDE_INSTALL_DBUSDIR /etc/dbus-1)
 set(KAUTH_HELPER_INSTALL_DIR /usr/lib/kauth/)
 
-find_package(Qt5 5.5 REQUIRED COMPONENTS Core Widgets DBus)
+find_package(Qt5 5.7 REQUIRED COMPONENTS Core Widgets DBus)
 find_package(KF5WidgetsAddons)
 find_package(KF5KIO)
 find_package(KF5Solid)
