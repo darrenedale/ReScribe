@@ -4,7 +4,7 @@ compiler:
 - gcc
 before_install:
 - sudo apt-get -q update
-- sudo apt-get -y install qtbase5-dev
+- sudo apt-get -y install qtbase5-dev libkf5widgetsaddons-dev kio-dev libkf5solid-dev libkf5auth-dev libarchive-dev
 script:
 - mkdir build
 - cd build
