@@ -11,7 +11,7 @@ addons:
     packages:
       - qtbase5-dev
       - libkf5widgetsaddons-dev
-      - kio-dev
+      - libkf5kio-dev
       - libkf5solid-dev
       - libkf5auth-dev
       - libarchive-dev
